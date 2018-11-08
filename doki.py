@@ -3,10 +3,8 @@ import math
 import numpy as np
 import pandas as pd
 
-from spotipy.oauth2 import SpotifyClientCredentials
 import spotipy
 
-#hello
 
 class SongsDataFrame():
     def __init__(self, credentials_manager, band_id):
@@ -29,6 +27,7 @@ class SongsDataFrame():
 
         self.album_ids_name = self.get_album_ids_names(
             self.spotify, self.band_id)
+
         self.album_ids = self.album_ids_name.keys()
         self.data_frame = self.generate_df(self.album_ids)
 
@@ -46,21 +45,25 @@ class SongsDataFrame():
 
         return album_id_to_name
 
-    def get_track_features(self, songs):
+    def get_track_features(self, songs) -> pd.DataFrame:
+        """Gets track features by chunks of 50""""
         track_ids = [foo['id'] for foo in songs]
         chunk_size = 50
-        num_chunks = int(math.ceil(len(track_ids) / float(chunk_size)))
+        num_chunks = math.ceil(len(track_ids) / float(chunk_size))
         features_add = []
+        
         for i in range(num_chunks):
             chunk_track_ids = track_ids[i*chunk_size:(i+1)*chunk_size]
-            chunk_features = self.spotify.audio_features(tracks=chunk_track_ids)
+            chunk_features = self.spotify.audio_features(
+                tracks=chunk_track_ids)
             features_add.extend(chunk_features)
 
         features_df = pd.DataFrame(features_add)
-        features_df = features_df[self.features] # filter features
+        features_df = features_df[self.features]  # filter features
         return features_df
 
-    def generate_df(self, album_ids):
+    def generate_df(self, album_ids) -> pd.DataFrameS:
+        """Returns pd.DataFrame of all tracks"""
         songs_df_data = []
         for album_id in album_ids:
             # get songs in the album
@@ -73,6 +76,7 @@ class SongsDataFrame():
                 this_row.extend(feature)
                 songs_df_data.append(this_row)
         columns = ['id', 'name', 'album'] + self.features
-        songs_df = pd.DataFrame(songs_df_data, columns=columns).drop_duplicates(subset='id')
+        songs_df = pd.DataFrame(
+            songs_df_data, columns=columns).drop_duplicates(subset='id')
         songs_df.album.replace(self.album_ids_name, inplace=True)
         return songs_df
