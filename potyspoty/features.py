@@ -112,3 +112,6 @@ class SongFeatures():
         # replace album ids by name
         songs_df.album.replace(self.albums, inplace=True)
         return songs_df
+    
+    def __getattr__(self, attr):
+        return getattr(self.data_frame, attr)
