@@ -13,6 +13,7 @@ class SongFeatures():
 
     Requires and instance of SpotifyClientCredentials.
     """
+
     def __init__(self, credentials_manager, band_id,
                  include_singles=False, include_compilations=False):
 
@@ -22,9 +23,9 @@ class SongFeatures():
         self.band_id = band_id
         self.band_name = self.spotify.artist(band_id)['name']
 
-        self.features = ['energy',
-                         'duration_ms',
+        self.features = ['duration_ms',
                          'loudness',
+                         'energy',
                          'valence',
                          'danceability',
                          'tempo',
