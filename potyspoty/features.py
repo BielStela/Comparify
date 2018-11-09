@@ -22,7 +22,7 @@ class SongFeatures():
 
         self.band_id = band_id
         self.band_name = self.spotify.artist(band_id)['name']
-
+        # features to keep
         self.features = ['duration_ms',
                          'loudness',
                          'energy',
@@ -39,6 +39,7 @@ class SongFeatures():
                                            include_compilations)
 
         self.album_ids = self.albums.keys()
+        self.album_names = self.albums.values()
         self.data_frame = self.generate_df(self.album_ids)
 
     def album_ids_names(self, service, band_id: str, include_singles=False,
@@ -105,6 +106,7 @@ class SongFeatures():
                 this_row = [t['id'], t['name'], album_id]
                 this_row.extend(feature)
                 songs_df_data.append(this_row)
+
         columns = ['id', 'name', 'album'] + self.features
         songs_df = pd.DataFrame(songs_df_data,
                                 columns=columns).drop_duplicates(subset='id')
@@ -112,6 +114,6 @@ class SongFeatures():
         # replace album ids by name
         songs_df.album.replace(self.albums, inplace=True)
         return songs_df
-    
+
     def __getattr__(self, attr):
         return getattr(self.data_frame, attr)
