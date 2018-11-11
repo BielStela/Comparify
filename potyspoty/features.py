@@ -15,7 +15,8 @@ class SongFeatures():
     """
 
     def __init__(self, credentials_manager, band_id,
-                 include_singles=False, include_compilations=False):
+                 include_singles=False, include_compilations=False,
+                 include_duration=False):
 
         self.spotify = spotipy.Spotify(
             client_credentials_manager=credentials_manager)
@@ -23,8 +24,7 @@ class SongFeatures():
         self.band_id = band_id
         self.band_name = self.spotify.artist(band_id)['name']
         # features to keep
-        self.features = ['duration_ms',
-                         'loudness',
+        self.features = ['loudness',
                          'energy',
                          'valence',
                          'danceability',
@@ -33,6 +33,9 @@ class SongFeatures():
                          'instrumentalness',
                          'acousticness',
                          'liveness']
+
+        if include_duration:
+            self.features.append('duration_ms')
 
         self.albums = self.album_ids_names(self.spotify, self.band_id,
                                            include_singles,
