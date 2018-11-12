@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-setup(name='potyspoty',
+setup(name='comparify',
       version='0.1',
       license='GNU GPLv3 or posterior',
       description='',
