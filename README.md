@@ -84,3 +84,6 @@ Finals|Senator
 Tan enfora|1% Of One
 Dos microbis|Us
 
+### Disclaimer
+
+This is a toy project so feel free to say me anything or sue me because of my bad abstractions.
