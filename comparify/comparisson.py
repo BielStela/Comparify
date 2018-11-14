@@ -20,7 +20,10 @@ from .features import SongFeatures
 
 class Comparator():
 
-    def __init__(self, scaler: str = None, projector: str = 'pca', plot_engine='plotly'):
+    def __init__(self, scaler: str = None,
+                 projector: str = 'pca',
+                 plot_engine='plotly'):
+
         self.scaler = scaler
         self.projector = projector
         self._check_projector(self.projector)
