@@ -11,7 +11,7 @@ import plotly.graph_objs as go
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE
-from sklearn.metrics import pairwise_distances_argmin
+from sklearn.metrics import pairwise_distances_argmin_min
 
 import umap
 
@@ -33,7 +33,7 @@ class Comparator():
 
     def _check_scaler(self, scaler: str) -> None:
         """
-        Safety param check 
+        Safety param check
         """
         avail_scalers = ['minmax', 'standard']
         if scaler in avail_scalers:
@@ -46,7 +46,7 @@ class Comparator():
 
     def _check_projector(self, projector: str) -> None:
         """
-        Safety param check 
+        Safety param check
         """
         avail_projectors = ['pca', 'umap', 'tsne']
         if projector not in avail_projectors:
@@ -88,7 +88,7 @@ class Comparator():
             self.plot_()
         self.fited_ = True
 
-    def concat_(self, df_list: List[SongFeatures]) -> pd.DataFrame:
+    def concat_(self, df_list: List[SongFeatures]) -> (pd.DataFrame, list):
         dfs = []
         band_names = []
         for df in df_list:
@@ -133,15 +133,24 @@ class Comparator():
 
 
 def most_similar_song(band1: SongFeatures,
-                      band2: SongFeatures) -> pd.DataFrame:
+                      band2: SongFeatures,
+                      sort: bool=True) -> pd.DataFrame:
+    """
+    Finds the closest song of band2 to songs of band1.
 
+    """
     band1_feat = band1.loc[:, band1.features]
     band2_feat = band2.loc[:, band2.features]
-    closests_idx = pairwise_distances_argmin(band1_feat, band2_feat)
+    closests_idx, values = pairwise_distances_argmin_min(
+        band1_feat, band2_feat)
     closest_songs = band2.data_frame.iloc[closests_idx, :]['name'].values
 
     df = pd.DataFrame({
         'name': band1.loc[:, 'name'],
-        'closest': closest_songs
+        'closest': closest_songs,
+        'distance': values
     })
+
+    if sort:
+        df.sort_values(by='distance', inplace=True)
     return df
