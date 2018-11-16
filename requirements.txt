@@ -1,0 +1,6 @@
+numpy
+pandas
+seaborn
+plotly
+scikit-learn
+git+https://github.com/plamere/spotipy.git#egg=spotipy
