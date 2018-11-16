@@ -9,8 +9,13 @@ Compare artists songs from Spotify using the sound features available in the spo
 2. go to repo folder and type:
 
 ```bash
+pip install -r requirements.txt
+```
+
+```bash
 python setup.py install
 ```
+
 
 ## Tutorial
 
